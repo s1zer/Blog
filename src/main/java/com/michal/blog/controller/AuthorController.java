@@ -1,6 +1,7 @@
 package com.michal.blog.controller;
 
 import com.michal.blog.model.dto.AuthorDto;
+import com.michal.blog.model.dto.AuthorPostDto;
 import com.michal.blog.service.AuthorService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -59,6 +60,11 @@ public class AuthorController {
         } else {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Author has not been found.");
         }
+    }
+
+    @GetMapping("{id}/posts")
+    Set<AuthorPostDto> getAuthorPosts(@PathVariable long id) {
+        return authorService.readAuthorPosts(id);
     }
 
 }

@@ -2,7 +2,9 @@ package com.michal.blog.service;
 
 import com.michal.blog.model.Author;
 import com.michal.blog.model.dto.AuthorDto;
+import com.michal.blog.model.dto.AuthorPostDto;
 import com.michal.blog.model.mapper.AuthorMapper;
+import com.michal.blog.model.mapper.AuthorPostMapper;
 import com.michal.blog.repository.AuthorRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -17,10 +19,12 @@ public class AuthorService implements GenericDao<AuthorDto, Long, String> {
 
     private AuthorRepository authorRepository;
     private AuthorMapper authorMapper;
+    private AuthorPostMapper authorPostMapper;
 
-    public AuthorService(AuthorRepository authorRepository, AuthorMapper authorMapper) {
+    public AuthorService(AuthorRepository authorRepository, AuthorMapper authorMapper, AuthorPostMapper authorPostMapper) {
         this.authorRepository = authorRepository;
         this.authorMapper = authorMapper;
+        this.authorPostMapper = authorPostMapper;
     }
 
     @Override
@@ -77,5 +81,14 @@ public class AuthorService implements GenericDao<AuthorDto, Long, String> {
     public void deleteById(Long id) {
         Optional<Author> authorToDelete = authorRepository.findById(id);
         authorToDelete.ifPresent(a -> authorRepository.delete(a));
+    }
+
+    public Set<AuthorPostDto> readAuthorPosts(Long authorId) {
+        return authorRepository.findById(authorId)
+                .map(Author::getPosts)
+                .orElseThrow(RuntimeException::new)
+                .stream()
+                .map(authorPostMapper::toDto)
+                .collect(Collectors.toSet());
     }
 }

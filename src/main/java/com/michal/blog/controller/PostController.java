@@ -1,5 +1,6 @@
 package com.michal.blog.controller;
 
+import com.michal.blog.model.dto.AuthorPostDto;
 import com.michal.blog.model.dto.PostDto;
 import com.michal.blog.model.mapper.PostMapper;
 import com.michal.blog.service.PostService;
