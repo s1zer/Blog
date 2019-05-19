@@ -21,12 +21,12 @@ public class AuthorController {
 
     @GetMapping("")
     Set<AuthorDto> getAuthors(@RequestParam(required = false) String firstName) {
-        return authorService.getAuthors(firstName);
+        return authorService.readAll(firstName);
     }
 
     @GetMapping("/{id}")
     ResponseEntity<AuthorDto> getAuthorById(@PathVariable Long id) {
-        return authorService.getAuthorById(id)
+        return authorService.readById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
@@ -36,7 +36,7 @@ public class AuthorController {
         if (authorDto.getId() != null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Object's id has to be empty.");
         } else {
-            AuthorDto savedAuthorDto = authorService.saveAuthor(authorDto);
+            AuthorDto savedAuthorDto = authorService.create(authorDto);
             return ResponseEntity.ok(savedAuthorDto);
         }
     }
@@ -44,7 +44,7 @@ public class AuthorController {
     @PutMapping("/{id}")
     ResponseEntity<AuthorDto> update(@PathVariable Long id, @RequestBody AuthorDto authorDto) {
         if (id.equals(authorDto.getId())) {
-            AuthorDto updatedAuthorDto = authorService.updateAuthor(authorDto);
+            AuthorDto updatedAuthorDto = authorService.update(authorDto);
             return ResponseEntity.ok(updatedAuthorDto);
         } else {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Id user to update is not the same in address URL.");
@@ -53,8 +53,8 @@ public class AuthorController {
 
     @DeleteMapping("/{id}")
     ResponseEntity<Long> delete(@PathVariable Long id) {
-        if (authorService.getAuthorById(id).isPresent()) {
-            authorService.deleteAuthor(id);
+        if (authorService.readById(id).isPresent()) {
+            authorService.deleteById(id);
             return ResponseEntity.ok(id);
         } else {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Author has not been found.");
