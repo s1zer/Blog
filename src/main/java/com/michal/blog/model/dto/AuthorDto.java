@@ -1,5 +1,7 @@
 package com.michal.blog.model.dto;
 
+import java.util.Objects;
+
 public class AuthorDto {
 
     private Long id;
@@ -38,4 +40,6 @@ public class AuthorDto {
     public void setAge(int age) {
         this.age = age;
     }
+
+
 }
